@@ -1,5 +1,5 @@
 import { Component, ElementRef, ViewChild, viewChild } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { LoginModel } from '../../models/login.model';
 import { FormValidateDirective } from 'form-validate-angular';
 
@@ -25,6 +25,13 @@ showOrHidePassword(){
     this.password.nativeElement.type ="password";
   }
   
+}
+
+signIn(form:NgForm){
+  if(form.valid)
+  {
+    
+  }
 }
 
 
