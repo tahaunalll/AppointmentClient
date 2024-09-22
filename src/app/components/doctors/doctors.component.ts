@@ -36,9 +36,7 @@ createModel:DoctorModel = new DoctorModel();
 
   ngOnInit(): void {
     this.getAll();
-    this.swal.callSwal("Title","Text",()=>{
-      alert("Delete is successful");
-    })
+   
   }
 
   getAll(){
