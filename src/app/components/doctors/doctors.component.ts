@@ -26,8 +26,10 @@ export class DoctorsComponent implements OnInit {
   departments = departments
 
   @ViewChild("addModalCloseBtn") addModalCloseBtn :ElementRef<HTMLButtonElement> | undefined;
+  @ViewChild("updateModalCloseBtn") updateModalCloseBtn :ElementRef<HTMLButtonElement> | undefined;
 
 createModel:DoctorModel = new DoctorModel();
+updateModel :DoctorModel = new DoctorModel();
 
   constructor(
     private http:HttpService,
@@ -54,6 +56,35 @@ createModel:DoctorModel = new DoctorModel();
         this.addModalCloseBtn?.nativeElement.click();
         this.createModel = new DoctorModel();
       })
+    }
+  }
+
+  delete(id:string, fullName:string){
+    this.swal.callSwal("Delete doctor", `Do you want to delete ${fullName} ?`,
+      ()=>{
+        this.http.post("Doctors/DeleteById", {id:id}, (res)=>{
+          this.swal.callToast(res.data,"info");
+          this.getAll();
+        })
+      }
+    );
+  }
+
+get(data:DoctorModel){
+  //params{...data}
+  this.updateModel = {...data}
+  this.updateModel.departmentValue = data.department.value;
+}
+
+  update(form:NgForm){
+    if(form.valid){
+      this.http.post<string>("Doctors/Update", this.updateModel,
+        (res)=>{
+          this.swal.callToast(res.data, "success");
+          this.getAll();
+          this.updateModalCloseBtn?.nativeElement.click();
+        }
+      );
     }
   }
 }

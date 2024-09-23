@@ -3,7 +3,8 @@ export class DoctorModel{
     firstName :string ="";
     lastName:string="";
     fullName:string="";
-    department:any ="";
+    department:DeparmentModel = new DeparmentModel();
+    departmentValue :number =0;
 }
 
 export class DeparmentModel{
