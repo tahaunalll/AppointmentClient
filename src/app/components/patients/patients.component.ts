@@ -1,37 +1,35 @@
-import { Component, ElementRef, OnInit, ViewChild, viewChild } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { PatientModel } from '../../models/patient.model';
 import { HttpService } from '../../services/http.service';
-import { DoctorModel } from '../../models/doctor.model';
-import { CommonModule } from '@angular/common';
-import { departments } from '../../constants';
-import { FormsModule, NgForm } from '@angular/forms';
-import { FormValidateDirective } from 'form-validate-angular';
 import { SwalService } from '../../services/swal.service';
-import { DoctorPipe } from '../../pipe/doctor.pipe';
+import { FormsModule, NgForm } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { FormValidateDirective } from 'form-validate-angular';
+import { PatientPipe } from '../../pipe/patient.pipe';
+import { RouterLink } from '@angular/router';
 
 @Component({
-  selector: 'app-doctors',
+  selector: 'app-patient',
   standalone: true,
   imports: [
-    RouterLink,
     CommonModule,
     FormsModule,
     FormValidateDirective,
-    DoctorPipe
+    PatientPipe,
+    RouterLink
   ],
-  templateUrl: './doctors.component.html',
-  styleUrl: './doctors.component.css'
+  templateUrl: './patients.component.html',
+  styleUrl: './patients.component.css'
 })
-export class DoctorsComponent implements OnInit {
-
-  doctors : DoctorModel[] = []
-  departments = departments
+export class PatientsComponent implements OnInit {
+  patients : PatientModel[] = []
+  
 
   @ViewChild("addModalCloseBtn") addModalCloseBtn :ElementRef<HTMLButtonElement> | undefined;
   @ViewChild("updateModalCloseBtn") updateModalCloseBtn :ElementRef<HTMLButtonElement> | undefined;
 
-createModel:DoctorModel = new DoctorModel();
-updateModel :DoctorModel = new DoctorModel();
+createModel:PatientModel = new PatientModel();
+updateModel :PatientModel = new PatientModel();
 
 search : string ="";
 
@@ -46,27 +44,27 @@ search : string ="";
   }
 
   getAll(){
-    this.http.post<DoctorModel[]>("Doctors/GetAll", {},(res) =>{
-      this.doctors=res.data;
+    this.http.post<PatientModel[]>("Patients/GetAll", {},(res) =>{
+      this.patients=res.data;
     })
   }
 
   add(form:NgForm){
     if(form.valid)
     {
-        this.http.post<string>("Doctors/Create", this.createModel, (res)=>{
+        this.http.post<string>("Patients/Create", this.createModel, (res)=>{
           this.swal.callToast(res.data, "success")
           this.getAll();
         this.addModalCloseBtn?.nativeElement.click();
-        this.createModel = new DoctorModel();
+        this.createModel = new PatientModel();
       })
     }
   }
 
   delete(id:string, fullName:string){
-    this.swal.callSwal("Delete doctor", `Do you want to delete ${fullName} ?`,
+    this.swal.callSwal("Delete patient", `Do you want to delete ${fullName} ?`,
       ()=>{
-        this.http.post("Doctors/DeleteById", {id:id}, (res)=>{
+        this.http.post("Patients/DeleteById", {id:id}, (res)=>{
           this.swal.callToast(res.data,"info");
           this.getAll();
         })
@@ -74,15 +72,15 @@ search : string ="";
     );
   }
 
-get(data:DoctorModel){
+get(data:PatientModel){
   //params{...data}
   this.updateModel = {...data}
-  this.updateModel.departmentValue = data.department.value;
+ 
 }
 
   update(form:NgForm){
     if(form.valid){
-      this.http.post<string>("Doctors/Update", this.updateModel,
+      this.http.post<string>("Patients/Update", this.updateModel,
         (res)=>{
           this.swal.callToast(res.data, "success");
           this.getAll();
